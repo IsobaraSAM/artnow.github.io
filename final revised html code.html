@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projects Ongoing In Akwa Ibom State</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
+    <style>
+        .project-card {
+            transition: all 0.3s ease-in-out;
+            background: linear-gradient(145deg, #ffffff, #e6e6e6);
+            box-shadow: 5px 5px 15px #d1d1d1, -5px -5px 15px #ffffff;
+        }
+        .project-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+        }
+        .project-card.active {
+            transform: scale(1.05);
+            box-shadow: 0 0 0 3px #E67817, 0 15px 30px rgba(0,0,0,0.1);
+        }
+        #map {
+            height: 1850px;
+            width: 100%;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        .slide-in {
+            animation: slideIn 0.5s ease-out;
+        }
+        @keyframes slideIn {
+            from {
+                transform: translateX(-100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }}
+        .logo {
+            position: absolute;
+            top: 10px;
+            left: 25px;
+            width: 212.25px;
+            height: 166.5px;
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-blue-100 to-indigo-200">
+    <img src= "Isob/AKS_logo.png" alt="Akwa Ibom State Logo" class="logo">
+<body class="min-h-screen bg-gradient-to-br from-blue-100 to-indigo-200">
+    <div class="py-12 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto">
+            <h1 class="text-5xl font-bold text-center mb-2 text-[#0C4823] animate__animated animate__fadeInDown">Projects Ongoing In Akwa Ibom State</h1>
+            <p class="text-2xl text-center text-[#0C4823] mb-12 animate__animated animate__fadeInUp">Transforming Our State, One Project at a Time</p>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div id="projectsContainer" class="space-y-8">
+                    <!-- Projects will be dynamically inserted here -->
+                </div>
+
+                <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+                    <div id="map"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const projects = [
+            {
+                id: 'project_One',
+                name: 'Project One',
+                location: 'Brook Street',
+                image: 'Isob/Project_One.jpg',
+                coordinates: [5.051270, 7.933500],
+                description: ' Construction of Tourists Recreation Centre.',
+                color: '#E67817'
+            },
+            {
+                id: 'project_Two',
+                name: 'Project Two',
+                location: 'Off Idoro Rd',
+                image: 'Isob/Project_Two.jpg',
+                coordinates: [5.046100, 7.934300],
+                description: 'An innovative educational facility designed to nurture future leaders.',
+                 color: '#E67817'
+            },
+            {
+                id: 'project_Three',
+                name: 'Project Three',
+                location: 'Afaha Ube Rd',
+                image: 'Isob/Project_Three.jpg',
+                coordinates: [5.051764, 7.903714],
+                description: 'A state-of-the-art underground drainage construction at Afaha Ube Rd.',
+                 color: '#E67817'
+            },
+            {
+                id: 'project_Four',
+                name: 'Model Farm',
+                location: 'Nsit Ubium',
+                image: 'Isob/Project_Four.jpg',
+                coordinates: [4.827778, 7.988889],
+                description: 'A cutting-edge agricultural initiative promoting sustainable farming practices.',
+                 color: '#E67817'
+            },
+            {
+                
+                id: 'project_Five',
+                name: 'Christ the King Primary School',
+                location: 'Wellington Bassey, Uyo, AKS',
+                image: 'Isob/Project_Five.jpg',
+                coordinates: [5.039220854949509, 7.935586279161376],
+                description: 'The renovation and expansion of Christ the King Primary School.',
+                sector: 'education',
+                 color: '#E67817'
+            },
+            {
+                id: 'project_Six',
+                name: 'Model Primary Health Centre',
+                location: 'Ibesikpo Asutan',
+                image: 'Isob/Project_Six.jpg',
+                coordinates: [4.965212997223642, 7.88550057437338],
+                description: 'The renovation of Model Primary Health Centre',
+                sector: 'Health',
+                color: '#E67817'  
+            }
+        ];
+
+        const projectsContainer = document.getElementById('projectsContainer');
+
+        function createProjectCard(project, index) {
+            const card = document.createElement('div');
+            card.className = `project-card bg-white rounded-lg shadow-md overflow-hidden slide-in`;
+            card.style.animationDelay = `${index * 0.1}s`;
+            card.innerHTML = `
+                <div class="relative">
+                    <img src="${project.image}" alt="${project.name}" class="w-full h-48 object-cover">
+                    <div class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center opacity-0 transition-opacity duration-300 hover:opacity-100">
+                        <p class="text-white text-center px-4">${project.description}</p>
+                    </div>
+                </div>
+                <div class="p-4">
+                    <h3 class="text-2xl font-semibold mb-2" style="color: ${project.color || '#1e40af'}">${project.name}</h3>
+                    <p class="text-indigo-600 flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                        </svg>
+                        ${project.location}
+                    </p>
+                </div>
+            `;
+            card.addEventListener('click', () => setActiveProject(project.id));
+            return card;
+        }
+
+        function setActiveProject(projectId) {
+            document.querySelectorAll('.project-card').forEach(card => {
+                card.classList.remove('active');
+            });
+            const activeCard = document.querySelector(`[data-id="${projectId}"]`);
+            if (activeCard) {
+                activeCard.classList.add('active');
+            }
+            const project = projects.find(p => p.id === projectId);
+            if (project) {
+                map.flyTo(project.coordinates, 15, {
+                    duration: 2
+                });
+            }
+        }
+
+        projects.forEach((project, index) => {
+            const card = createProjectCard(project, index);
+            card.setAttribute('data-id', project.id);
+            projectsContainer.appendChild(card);
+        });
+
+        // Initialize map
+        var map = L.map('map').setView([5.0331, 7.9253], 10);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+
+        // Add markers for each project
+        projects.forEach(project => {
+            L.marker(project.coordinates)
+                .addTo(map)
+                .bindPopup(`
+                    <div class="text-center">
+                        <h3 class="text-lg font-semibold mb-2">${project.name}</h3>
+                        <p class="text-sm mb-2">${project.location}</p>
+                        <img src="${project.image}" alt="${project.name}" class="w-full h-32 object-cover mb-2">
+                        <p class="text-sm">${project.description}</p>
+                    </div>
+                `, { maxWidth: 300 });
+        });
+
+        // Fit the map to show all markers
+        const bounds = L.latLngBounds(projects.map(p => p.coordinates));
+        map.fitBounds(bounds);
+    </script>
+</body>
+</html>
