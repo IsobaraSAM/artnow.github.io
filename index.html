@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Projects Ongoing In Akwa Ibom State</title>
+    <title>Akwa Ibom ARISE Projects</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
@@ -23,7 +23,7 @@
             box-shadow: 0 0 0 3px #E67817, 0 15px 30px rgba(0,0,0,0.1);
         }
         #map {
-            height: 1850px;
+            height: 1000px;
             width: 100%;
             border-radius: 15px;
             box-shadow: 0 10px 20px rgba(0,0,0,0.1);
@@ -41,22 +41,29 @@
                 opacity: 1;
             }}
         .logo {
-            position: absolute;
+            position: fixed;
             top: 10px;
             left: 25px;
             width: 212.25px;
             height: 166.5px;
             z-index: 1000;
         }
+        @media (max-width: 640px) {
+            .logo {
+                width: 106.125px;
+                height: 83.25px;
+            }
+        }
     </style>
 </head>
 <body class="min-h-screen bg-gradient-to-br from-blue-100 to-indigo-200">
-    <img src= "Isob/AKS_logo.png" alt="Akwa Ibom State Logo" class="logo">
-<body class="min-h-screen bg-gradient-to-br from-blue-100 to-indigo-200">
+    <img src="Isob/AKS_logo.png" alt="Akwa Ibom State Logo" class="logo">
     <div class="py-12 px-4 sm:px-6 lg:px-8">
         <div class="max-w-7xl mx-auto">
-            <h1 class="text-5xl font-bold text-center mb-2 text-[#0C4823] animate__animated animate__fadeInDown">Projects Ongoing In Akwa Ibom State</h1>
-            <p class="text-2xl text-center text-[#0C4823] mb-12 animate__animated animate__fadeInUp">Transforming Our State, One Project at a Time</p>
+            <h1 class="text-4xl sm:text-5xl font-bold text-center mb-2 text-[#0C4823] animate__animated animate__fadeInDown pt-32 sm:pt-16">Akwa Ibom ARISE Projects</h1>
+            <p class="text-xl sm:text-2xl text-center text-[#0C4823] mb-12 animate__animated animate__fadeInUp">
+                Discover the journey of Akwa Ibom ARISE projects. Explore our interactive map to see completed, ongoing, and planned initiatives with verifiable locations across sectors.
+            </p>
 
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 <div id="projectsContainer" class="space-y-8">
@@ -73,31 +80,24 @@
     <script>
         const projects = [
             {
-                id: 'project_One',
-                name: 'Project One',
-                location: 'Brook Street',
-                image: 'Isob/Project_One.jpg',
-                coordinates: [5.051270, 7.933500],
-                description: ' Construction of Tourists Recreation Centre.',
-                color: '#E67817'
-            },
-            {
                 id: 'project_Two',
-                name: 'Project Two',
+                name: 'Model School',
                 location: 'Off Idoro Rd',
                 image: 'Isob/Project_Two.jpg',
                 coordinates: [5.046100, 7.934300],
                 description: 'An innovative educational facility designed to nurture future leaders.',
-                 color: '#E67817'
+                sector: 'Education',
+                color: '#E67817'
             },
             {
-                id: 'project_Three',
-                name: 'Project Three',
-                location: 'Afaha Ube Rd',
-                image: 'Isob/Project_Three.jpg',
-                coordinates: [5.051764, 7.903714],
-                description: 'A state-of-the-art underground drainage construction at Afaha Ube Rd.',
-                 color: '#E67817'
+                id: 'project_Five',
+                name: 'Christ the King Primary School',
+                location: 'Wellington Bassey, Uyo, AKS',
+                image: 'Isob/Project_Five.jpg',
+                coordinates: [5.039220854949509, 7.935586279161376],
+                description: 'The renovation and expansion of Christ the King Primary School.',
+                sector: 'Education',
+                color: '#E67817'
             },
             {
                 id: 'project_Four',
@@ -106,18 +106,8 @@
                 image: 'Isob/Project_Four.jpg',
                 coordinates: [4.827778, 7.988889],
                 description: 'A cutting-edge agricultural initiative promoting sustainable farming practices.',
-                 color: '#E67817'
-            },
-            {
-                
-                id: 'project_Five',
-                name: 'Christ the King Primary School',
-                location: 'Wellington Bassey, Uyo, AKS',
-                image: 'Isob/Project_Five.jpg',
-                coordinates: [5.039220854949509, 7.935586279161376],
-                description: 'The renovation and expansion of Christ the King Primary School.',
-                sector: 'education',
-                 color: '#E67817'
+                sector: 'Agriculture',
+                color: '#E67817'
             },
             {
                 id: 'project_Six',
@@ -128,6 +118,26 @@
                 description: 'The renovation of Model Primary Health Centre',
                 sector: 'Health',
                 color: '#E67817'  
+            },
+            {
+                id: 'project_One',
+                name: 'Tourists Recreation Centre',
+                location: 'Brook Street',
+                image: 'Isob/Project_One.jpg',
+                coordinates: [5.051270, 7.933500],
+                description: 'Construction of Tourists Recreation Centre.',
+                sector: 'Tourism',
+                color: '#E67817'
+            },
+            {
+                id: 'project_Three',
+                name: 'Underground Drainage',
+                location: 'Afaha Ube Rd',
+                image: 'Isob/Project_Three.jpg',
+                coordinates: [5.051764, 7.903714],
+                description: 'A state-of-the-art underground drainage construction at Afaha Ube Rd.',
+                sector: 'Urban Renewal',
+                color: '#E67817'
             }
         ];
 
@@ -146,7 +156,8 @@
                 </div>
                 <div class="p-4">
                     <h3 class="text-2xl font-semibold mb-2" style="color: ${project.color || '#1e40af'}">${project.name}</h3>
-                    <p class="text-indigo-600 flex items-center">
+                    <p class="text-indigo-600 mb-2">${project.sector}</p>
+                    <p class="text-gray-600 flex items-center">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -195,6 +206,7 @@
                 .bindPopup(`
                     <div class="text-center">
                         <h3 class="text-lg font-semibold mb-2">${project.name}</h3>
+                        <p class="text-sm mb-2">${project.sector}</p>
                         <p class="text-sm mb-2">${project.location}</p>
                         <img src="${project.image}" alt="${project.name}" class="w-full h-32 object-cover mb-2">
                         <p class="text-sm">${project.description}</p>
