@@ -50,7 +50,7 @@
     <header class="sticky-header p-4">
         <div class="container mx-auto flex flex-col sm:flex-row items-center justify-between">
             <div class="flex items-center mb-4 sm:mb-0">
-                <img src="Isob/AKS_logo.png" alt="ARISE Logo" class="logo mr-4">
+                <img src="/api/placeholder/50/50" alt="ARISE Logo" class="logo mr-4">
                 <h1 class="text-2xl sm:text-3xl font-bold text-green-800">
                     Akwa Ibom<br class="sm:hidden"> ARISE Projects
                 </h1>
@@ -87,7 +87,7 @@
                 id: 'project_Six',
                 name: 'Model Primary Health Centre',
                 location: 'Ibesikpo Asutan',
-                image: 'Isob/Project_Six.jpg',
+                image: 'Project_Six.jpg',
                 coordinates: [4.965212997223642, 7.88550057437338],
                 description: 'The renovation of Model Primary Health Centre',
                 sector: 'Health',
@@ -97,7 +97,7 @@
                 id: 'project_Two',
                 name: 'Model School',
                 location: 'Off Idoro Rd',
-                image: 'Isob/Project_Two.jpg',
+                image: 'Project_Two.jpg',
                 coordinates: [5.046100, 7.934300],
                 description: 'An innovative educational facility designed to nurture future leaders.',
                 sector: 'Education',
@@ -107,7 +107,7 @@
                 id: 'project_Five',
                 name: 'Christ the King Primary School',
                 location: 'Wellington Bassey, Uyo, AKS',
-                image: 'Isob/Project_Five.jpg',
+                image: 'Project_Five.jpg',
                 coordinates: [5.039220854949509, 7.935586279161376],
                 description: 'The renovation and expansion of Christ the King Primary School.',
                 sector: 'Education',
@@ -117,7 +117,7 @@
                 id: 'project_Four',
                 name: 'Model Farm',
                 location: 'Nsit Ubium',
-                image: 'Isob/Project_Four.jpg',
+                image: 'Project_Fout.jpg',
                 coordinates: [4.827778, 7.988889],
                 description: 'A cutting-edge agricultural initiative promoting sustainable farming practices.',
                 sector: 'Agriculture',
@@ -127,7 +127,7 @@
                 id: 'project_One',
                 name: 'Tourists Recreation Centre',
                 location: 'Brook Street',
-                image: 'Isob/Project_One.jpg',
+                image: 'Project_One.jpg',
                 coordinates: [5.051270, 7.933500],
                 description: 'Construction of Tourists Recreation Centre.',
                 sector: 'Tourism',
@@ -137,7 +137,7 @@
                 id: 'project_Three',
                 name: 'Underground Drainage',
                 location: 'Afaha Ube Rd',
-                image: 'Isob/Project_Three.jpg',
+                image: 'Project_Three.jpg',
                 coordinates: [5.051764, 7.903714],
                 description: 'A state-of-the-art underground drainage construction at Afaha Ube Rd.',
                 sector: 'Urban Renewal',
@@ -151,6 +151,7 @@
             const card = document.createElement('div');
             card.className = 'project-card p-4 cursor-pointer';
             card.innerHTML = `
+                <img src="${project.image}" alt="${project.name}" class="w-full h-48 object-cover rounded-lg mb-4">
                 <h3 class="text-xl font-semibold mb-2 text-green-800">${project.name}</h3>
                 <p class="text-gray-600 flex items-center mb-2">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
