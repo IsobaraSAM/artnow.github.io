@@ -15,58 +15,91 @@
             box-shadow: 5px 5px 15px #d1d1d1, -5px -5px 15px #ffffff;
         }
         .project-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+            transform: translateY(-10px) rotate(2deg);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
         }
         .project-card.active {
-            transform: scale(1.05);
-            box-shadow: 0 0 0 3px #E67817, 0 15px 30px rgba(0,0,0,0.1);
+            transform: scale(1.05) rotate(-2deg);
+            box-shadow: 0 0 0 5px #E67817, 0 20px 40px rgba(0,0,0,0.2);
         }
         #map {
-            height: 1000px;
+            height: 800px;
             width: 100%;
             border-radius: 15px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
         }
         .slide-in {
             animation: slideIn 0.5s ease-out;
         }
         @keyframes slideIn {
             from {
-                transform: translateX(-100%);
+                transform: translateX(-100%) rotate(-5deg);
                 opacity: 0;
             }
             to {
-                transform: translateX(0);
+                transform: translateX(0) rotate(0deg);
                 opacity: 1;
-            }}
-        .logo {
-            position: fixed;
-            top: 10px;
-            left: 25px;
-            width: 212.25px;
-            height: 166.5px;
-            z-index: 1000;
-        }
-        @media (max-width: 640px) {
-            .logo {
-                width: 106.125px;
-                height: 83.25px;
             }
+        }
+        .sticky-header {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background-color: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        .sticky-header:hover {
+            background-color: rgba(255, 255, 255, 1);
+        }
+        .logo {
+            width: 106.125px;
+            height: 83.25px;
+            transition: all 0.3s ease;
+        }
+        .logo:hover {
+            transform: scale(1.1) rotate(5deg);
+        }
+        .main-title {
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        .main-title:hover {
+            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.2);
+            transform: scale(1.05);
+        }
+        .sector-badge {
+            transition: all 0.3s ease;
+        }
+        .sector-badge:hover {
+            transform: scale(1.1) rotate(-5deg);
         }
     </style>
 </head>
 <body class="min-h-screen bg-gradient-to-br from-blue-100 to-indigo-200">
-    <img src="Isob/AKS_logo.png" alt="Akwa Ibom State Logo" class="logo">
+    <header class="sticky-header p-4 flex items-center justify-between">
+        <div class="flex items-center space-x-4">
+            <img src="Isob/AKS_logo.png" alt="Akwa Ibom State Logo" class="logo">
+            <h1 class="text-3xl sm:text-4xl font-bold text-[#0C4823] main-title">Akwa Ibom ARISE Projects</h1>
+        </div>
+        <nav>
+            <ul class="flex space-x-4">
+                <li><a href="#" class="text-[#0C4823] hover:text-[#E67817] transition duration-300">Home</a></li>
+                <li><a href="#" class="text-[#0C4823] hover:text-[#E67817] transition duration-300">About</a></li>
+                <li><a href="#" class="text-[#0C4823] hover:text-[#E67817] transition duration-300">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
     <div class="py-12 px-4 sm:px-6 lg:px-8">
         <div class="max-w-7xl mx-auto">
-            <h1 class="text-4xl sm:text-5xl font-bold text-center mb-2 text-[#0C4823] animate__animated animate__fadeInDown pt-32 sm:pt-16">Akwa Ibom ARISE Projects</h1>
             <p class="text-xl sm:text-2xl text-center text-[#0C4823] mb-12 animate__animated animate__fadeInUp">
                 Discover the journey of Akwa Ibom ARISE projects. Explore our interactive map to see completed, ongoing, and planned initiatives with verifiable locations across sectors.
             </p>
 
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                <div id="projectsContainer" class="space-y-8">
+                <div id="projectsContainer" class="space-y-8 overflow-y-auto max-h-[800px] pr-4">
                     <!-- Projects will be dynamically inserted here -->
                 </div>
 
@@ -148,15 +181,15 @@
             card.className = `project-card bg-white rounded-lg shadow-md overflow-hidden slide-in`;
             card.style.animationDelay = `${index * 0.1}s`;
             card.innerHTML = `
-                <div class="relative">
-                    <img src="${project.image}" alt="${project.name}" class="w-full h-48 object-cover">
-                    <div class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center opacity-0 transition-opacity duration-300 hover:opacity-100">
-                        <p class="text-white text-center px-4">${project.description}</p>
+                <div class="relative group">
+                    <img src="${project.image}" alt="${project.name}" class="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                        <p class="text-white text-center px-4 transform transition-transform duration-300 group-hover:scale-105">${project.description}</p>
                     </div>
                 </div>
                 <div class="p-4">
-                    <h3 class="text-2xl font-semibold mb-2" style="color: ${project.color || '#1e40af'}">${project.name}</h3>
-                    <p class="text-indigo-600 mb-2">${project.sector}</p>
+                    <h3 class="text-2xl font-semibold mb-2 transition-colors duration-300 hover:text-[${project.color}]">${project.name}</h3>
+                    <span class="inline-block px-3 py-1 text-sm font-semibold text-white bg-[${project.color}] rounded-full mb-2 sector-badge">${project.sector}</span>
                     <p class="text-gray-600 flex items-center">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
@@ -177,6 +210,7 @@
             const activeCard = document.querySelector(`[data-id="${projectId}"]`);
             if (activeCard) {
                 activeCard.classList.add('active');
+                activeCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
             }
             const project = projects.find(p => p.id === projectId);
             if (project) {
@@ -219,4 +253,4 @@
         map.fitBounds(bounds);
     </script>
 </body>
-</html>
+</html> final clue I know ryt
