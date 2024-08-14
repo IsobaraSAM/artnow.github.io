@@ -38,13 +38,13 @@
             outline: 3px solid #F97316;
         }
         #map {
-            height: 1500px;
+            height: 600px;
             width: 100%;
             border-radius: 10px;
         }
         @media (min-width: 768px) {
             #map {
-                height: 1500px;
+                height: 800px;
             }
         }
         .project-image-container {
@@ -103,7 +103,7 @@
                 <!-- Projects will be dynamically inserted here -->
             </div>
 
-            <div class="bg-white rounded-lg shadow-md overflow-hidden">
+            <div id="mapContainer" class="bg-white rounded-lg shadow-md overflow-hidden">
                 <div id="map"></div>
             </div>
         </div>
@@ -210,9 +210,21 @@
             }
             const project = projects.find(p => p.id === projectId);
             if (project) {
-                map.flyTo(project.coordinates, 15, {
-                    duration: 2
-                });
+                // Scroll to the map container
+                document.getElementById('mapContainer').scrollIntoView({ behavior: 'smooth' });
+
+                // Wait for the scroll to complete before flying to the location
+                setTimeout(() => {
+                    map.flyTo(project.coordinates, 15, {
+                        duration: 1  // Reduced duration for faster transition
+                    });
+                    
+                    // Open the popup for the selected project
+                    const marker = projectMarkers[projectId];
+                    if (marker) {
+                        marker.openPopup();
+                    }
+                }, 500); // Adjust this delay if needed
             }
         }
 
@@ -228,9 +240,12 @@
             attribution: '© OpenStreetMap contributors'
         }).addTo(map);
 
+        // Store markers in an object for easy access
+        const projectMarkers = {};
+
         // Add markers for each project
         projects.forEach(project => {
-            L.marker(project.coordinates)
+            const marker = L.marker(project.coordinates)
                 .addTo(map)
                 .bindPopup(`
                     <div class="text-center">
@@ -241,6 +256,8 @@
                         <p class="text-sm">${project.description}</p>
                     </div>
                 `, { maxWidth: 300 });
+            
+            projectMarkers[project.id] = marker;
         });
 
         // Fit the map to show all markers
