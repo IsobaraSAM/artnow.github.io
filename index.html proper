@@ -49,9 +49,9 @@
         }
         .project-image-container {
             position: relative;
+            overflow: hidden;
         }
         .project-description {
-            display: none;
             position: absolute;
             top: 0;
             left: 0;
@@ -60,17 +60,77 @@
             background-color: rgba(0, 0, 0, 0.7);
             color: white;
             padding: 10px;
-            border-radius: 8px;
+            border-radius: 10px;
             overflow-y: auto;
+            opacity: 0;
+            transition: opacity 0.3s ease;
         }
         .project-image-container:hover .project-description {
-            display: block;
+            opacity: 1;
         }
         .leaflet-popup-content img {
             width: 100%;
             height: auto;
             border-radius: 4px;
             margin-bottom: 10px;
+        }
+        .tap-on-pictures {
+            background-color: #F97316;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            font-weight: bold;
+        }
+        .sector-filter {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .sector-filter button {
+            padding: 5px 10px;
+            border-radius: 20px;
+            background-color: #E2E8F0;
+            color: #4A5568;
+            transition: all 0.3s ease;
+        }
+        .sector-filter button.active {
+            background-color: #F97316;
+            color: white;
+        }
+        #contact-modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 500px;
+            border-radius: 10px;
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
         }
     </style>
 </head>
@@ -87,7 +147,7 @@
                 <ul class="flex space-x-4">
                     <li><a href="#" class="text-green-800 hover:text-orange-500 transition duration-300">Home</a></li>
                     <li><a href="#" class="text-green-800 hover:text-orange-500 transition duration-300">About</a></li>
-                    <li><a href="#" class="text-green-800 hover:text-orange-500 transition duration-300">Contact</a></li>
+                    <li><a href="#" id="contact-link" class="text-green-800 hover:text-orange-500 transition duration-300">Contact</a></li>
                 </ul>
             </nav>
         </div>
@@ -97,6 +157,14 @@
         <p class="text-lg text-center text-green-800 mb-8">
             Discover the journey of Akwa Ibom ARISE projects. Explore our interactive map to see completed, ongoing, and planned initiatives with verifiable locations across sectors.
         </p>
+
+        <div class="tap-on-pictures">
+            Tap On Pictures or Cards for More Details
+        </div>
+
+        <div class="sector-filter" id="sector-filter">
+            <!-- Sector filter buttons will be dynamically inserted here -->
+        </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div id="projectsContainer" class="space-y-4">
@@ -108,6 +176,15 @@
             </div>
         </div>
     </main>
+
+    <div id="contact-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 class="text-2xl font-bold mb-4">Contact Us</h2>
+            <p class="mb-2">For more information about Akwa Ibom ARISE Projects, please contact us:</p>
+            <p class="font-bold">Phone: 08023320968</p>
+        </div>
+    </div>
 
     <script>
         const projects = [
@@ -174,6 +251,7 @@
         ];
 
         const projectsContainer = document.getElementById('projectsContainer');
+        const sectorFilter = document.getElementById('sector-filter');
 
         function createProjectCard(project) {
             const card = document.createElement('div');
@@ -210,59 +288,125 @@
             }
             const project = projects.find(p => p.id === projectId);
             if (project) {
-                // Scroll to the map container
                 document.getElementById('mapContainer').scrollIntoView({ behavior: 'smooth' });
 
-                // Wait for the scroll to complete before flying to the location
                 setTimeout(() => {
                     map.flyTo(project.coordinates, 15, {
-                        duration: 1  // Reduced duration for faster transition
+                        duration: 1
                     });
                     
-                    // Open the popup for the selected project
                     const marker = projectMarkers[projectId];
                     if (marker) {
                         marker.openPopup();
                     }
-                }, 500); // Adjust this delay if needed
+                }, 500);
             }
         }
 
-        projects.forEach((project) => {
-            const card = createProjectCard(project);
-            projectsContainer.appendChild(card);
-        });
+        function renderProjects(filteredProjects = projects) {
+            projectsContainer.innerHTML = '';
+            filteredProjects.forEach((project) => {
+                const card = createProjectCard(project);
+                projectsContainer.appendChild(card);
+            });
+        }
 
-        // Initialize map
-        var map = L.map('map').setView([5.0331, 7.9253], 10);
-
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '© OpenStreetMap contributors'
-        }).addTo(map);
-
-        // Store markers in an object for easy access
-        const projectMarkers = {};
-
-        // Add markers for each project
-        projects.forEach(project => {
-            const marker = L.marker(project.coordinates)
-                .addTo(map)
-                .bindPopup(`
-                    <div class="text-center">
-                        <h3 class="text-lg font-semibold mb-2">${project.name}</h3>
-                        <img src="${project.image}" alt="${project.name}">
-                        <p class="text-sm mb-2">${project.sector}</p>
-                        <p class="text-sm mb-2">${project.location}</p>
-                        <p class="text-sm">${project.description}</p>
-                    </div>
-                `, { maxWidth: 300 });
+        function createSectorFilters() {
+            const sectors = [...new Set(projects.map(project => project.sector))];
+            sectors.unshift('All');
             
-            projectMarkers[project.id] = marker;
-        });
+            sectors.forEach(sector => {
+                const button = document.createElement('button');
+                button.textContent = sector;
+                button.addEventListener('click', () => filterProjects(sector));
+                sectorFilter.appendChild(button);
+            });
+        }
 
-        // Fit the map to show all markers
-        const bounds = L.latLngBounds(projects.map(p => p.coordinates));
-        map.fitBounds(bounds);
+        function filterProjects(sector) {
+            const buttons = sectorFilter.querySelectorAll('button');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            const filteredProjects = sector === 'All' ? projects : projects.filter(project => project.sector === sector);
+            renderProjects(filteredProjects);
+            
+            const bounds = L.latLngBounds(filteredProjects.map(p => p.coordinates));
+            map.fitBounds(bounds);
+        }
+
+        createSectorFilters();
+        renderProjects();
+
+       // Initialize map
+var map = L.map('map').setView([5.0331, 7.9253], 10);
+
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© OpenStreetMap contributors'
+}).addTo(map);
+
+// Store markers in an object for easy access
+const projectMarkers = {};
+
+// Add markers for each project
+projects.forEach(project => {
+    const marker = L.marker(project.coordinates)
+        .addTo(map)
+        .bindPopup(`
+            <div class="text-center">
+                <h3 class="text-lg font-semibold mb-2">${project.name}</h3>
+                <img src="${project.image}" alt="${project.name}">
+                <p class="text-sm mb-2">${project.sector}</p>
+                <p class="text-sm mb-2">${project.location}</p>
+                <p class="text-sm">${project.description}</p>
+            </div>
+        `, { maxWidth: 300 });
+    
+    projectMarkers[project.id] = marker;
+});
+
+// Fit the map to show all markers
+const bounds = L.latLngBounds(projects.map(p => p.coordinates));
+map.fitBounds(bounds);
+
+// Contact modal functionality
+const modal = document.getElementById("contact-modal");
+const contactLink = document.getElementById("contact-link");
+const closeBtn = document.getElementsByClassName("close")[0];
+
+contactLink.onclick = function() {
+    modal.style.display = "block";
+}
+
+closeBtn.onclick = function() {
+    modal.style.display = "none";
+}
+
+window.onclick = function(event) {
+    if (event.target == modal) {
+        modal.style.display = "none";
+    }
+}
+
+// Contact modal functionality
+        const modal = document.getElementById("contact-modal");
+        const contactLink = document.getElementById("contact-link");
+        const closeBtn = document.getElementsByClassName("close")[0];
+
+        contactLink.onclick = function() {
+            modal.style.display = "block";
+        }
+
+        closeBtn.onclick = function() {
+            modal.style.display = "none";
+        }
+
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
     </script>
 </body>
 </html>
+        
